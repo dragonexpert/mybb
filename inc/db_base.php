@@ -460,7 +460,7 @@ interface DB_Base
      * @param resource|PDOStatement|mysqli_result $query The query resource
      * @return mixed An array of arrays.
      */
-    function fetchAllArray($query);
+    function fetch_all_array($query);
 
     /**
      * Fetch a single column from all rows.
@@ -468,19 +468,23 @@ interface DB_Base
      * @param string $field The field to fetch.
      * @return mixed An array containing the field from all rows.
      */
-    function fetchAllField($query, $field);
+    function fetch_all_field($query, $field);
 
     /**
      * Fetch a result row as an object instead of an associative array.
      * @param resource|PDOStatement|mysqli_result $query The query resource.
+     * @param string $class_name The name of the class.  Optional.
+     * @param array $params An array of additional parameters to pass to the constructor. Optional.
      * @return mixed An object of a result row.
      */
-    function fetchObject($query);
+    function fetch_object($query, $class_name="", $params=array());
 
     /**
      * Fetch all results as an array of objects.
      * @param resource|PDOStatement|mysqli_result $query The query resource.
+     * @param string $class_name The name of the class.  Optional.
+     * @param array $params An array of additional parameters to pass to the constructor. Optional.
      * @return mixed An array of objects.
      */
-    function fetchAllObject($query);
+    function fetch_all_object($query, $class_name="", $params=array());
 }

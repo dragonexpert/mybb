@@ -1640,7 +1640,7 @@ class DB_MySQLi implements DB_Base
      * @param mysqli_result $query A resource query.
      * @return mixed|void An array of arrays.
      */
-    function fetchAllArray($query)
+    function fetch_all_array($query)
     {
         $array = array();
         while($result = $this->fetch_array($query))
@@ -1656,7 +1656,7 @@ class DB_MySQLi implements DB_Base
      * @param string $field The field to fetch.
      * @return mixed|void An array containing the values of the field.
      */
-    function fetchAllField($query, $field)
+    function fetch_all_field($query, $field)
     {
         $array = array();
         while($result = $this->fetch_field($query, $field))
@@ -1668,25 +1668,57 @@ class DB_MySQLi implements DB_Base
 
     /**
      * Fetch a single row as an object.
-     * @param mysqli_result $query A resource query
+     * @param mysqli_result $query A resource query.
+     * @param string $class_name The name of the class.  Optional.
+     * @param array $params An array of additional parameters to pass to the constructor. Optional.
      * @return mixed|object|null An object on success.  False on failure.
      */
-    function fetchObject($query)
+    function fetch_object($query, $class_name="", $params=array())
     {
+        if($class_name != "")
+        {
+            if(count($params) >= 1)
+            {
+                return mysqli_fetch_object($query, $class_name, $params);
+            }
+            return mysqli_fetch_object($query, $class_name);
+        }
         return mysqli_fetch_object($query);
     }
 
     /**
      * Fetch all results as an array of objects.
      * @param mysqli_result $query A resource query.
+     * @param string $class_name The name of the class.  Optional.
+     * @param array $params An array of additional parameters to pass to the constructor. Optional.
      * @return array|mixed An array of objects.
      */
-    function fetchAllObject($query)
+    function fetch_all_object($query, $class_name="", $params=array())
     {
         $array = array();
-        while($result = $this->fetchObject($query))
+        if($class_name == "")
         {
-            $array[] = $result;
+            while ($result = $this->fetch_object($query, null, null))
+            {
+                $array[] = $result;
+            }
+        }
+        else
+        {
+            if(count($params) >= 1)
+            {
+                while($result = $this->fetch_object($query, $class_name, $params))
+                {
+                    $array[] = $result;
+                }
+            }
+            else
+            {
+                while($result = $this->fetch_object($query, $class_name, null))
+                {
+                    $array[] = $result;
+                }
+            }
         }
         return $array;
     }
